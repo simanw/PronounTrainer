@@ -60,6 +60,8 @@ class SendMessageBar: UIView {
         if msg.isEmpty {
             return
         }
+        // MARK - PT APP
+        // corefResolver.sendMsg(msg)
         delegate?.sendMessageBar(sendText: msg)
         inputField.text = nil
         textViewDidChange(inputField)

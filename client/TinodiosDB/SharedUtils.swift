@@ -244,6 +244,8 @@ extension Tinode {
     public func connectDefault(inBackground bkg: Bool) throws -> PromisedReply<ServerMessage>? {
         let (hostName, useTLS) = Tinode.getConnectionParams()
         BaseDb.log.debug("Connecting to %@, secure %@", hostName, useTLS ? "YES" : "NO")
+        //MARK - PT APP - DEBUG
+//        BaseDb.log.info("Connecting to %@, secure %@", hostName, useTLS ? "YES" : "NO")
         return try connect(to: hostName, useTLS: useTLS, inBackground: bkg)
     }
 }

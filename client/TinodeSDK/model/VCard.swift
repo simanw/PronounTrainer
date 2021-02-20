@@ -109,8 +109,16 @@ public class VCard: Codable, Mergeable {
         self.photo = Photo(image: avatar)
     }
     // MARK: PT APP
-    public init(fn: String?, pronouns: Set<Pronoun>?) {
+    public init(fn: String?, avatar: Data?, pronouns: Set<Pronoun>?) {
         self.fn = fn
+        guard let avatar = avatar else { return }
+        self.photo = Photo(type: nil, data: avatar)
+        self.pronouns = pronouns
+    }
+    public init(fn: String?, avatar: UIImage?, pronouns: Set<Pronoun>?) {
+        self.fn = fn
+        guard let avatar = avatar else { return }
+        self.photo = Photo(image: avatar)
         self.pronouns = pronouns
     }
     
