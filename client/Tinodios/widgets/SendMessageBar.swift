@@ -15,6 +15,8 @@ protocol SendMessageBarDelegate: class {
     func sendMessageBar(textChangedTo text: String)
 
     func sendMessageBar(enablePeersMessaging: Bool)
+    // MARK - PT APP
+    func sendMessageWithContext(sendText: String)
 }
 
 class SendMessageBar: UIView {
@@ -61,7 +63,7 @@ class SendMessageBar: UIView {
             return
         }
         // MARK - PT APP
-        // corefResolver.sendMsg(msg)
+        delegate?.sendMessageWithContext(sendText: msg)
         delegate?.sendMessageBar(sendText: msg)
         inputField.text = nil
         textViewDidChange(inputField)

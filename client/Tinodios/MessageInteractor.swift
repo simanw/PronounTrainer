@@ -18,6 +18,8 @@ protocol MessageBusinessLogic: class {
     func leaveTopic()
 
     func sendMessage(content: Drafty)
+    //MARK - PT APP
+    func sendMessageWithContext(text: String)
     func sendReadNotification(explicitSeq: Int?, when deadline: DispatchTime)
     func sendTypingNotification()
     func enablePeersMessaging()
@@ -231,6 +233,13 @@ class MessageInteractor: DefaultComTopic.Listener, MessageBusinessLogic, Message
             }
         )
     }
+    // MARK - PT APP
+    func sendMessageWithContext(text: String) {
+        var context: [StoredMessage]
+        context = self.messages
+        
+    }
+    
     func sendReadNotification(explicitSeq: Int? = nil, when deadline: DispatchTime) {
         guard self.sendReadReceipts else { return }
         // We don't send a notification if more notifications are pending.

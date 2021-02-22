@@ -18,7 +18,12 @@ extension MessageViewController : SendMessageBarDelegate {
     func sendMessageBar(sendText: String) {
         interactor?.sendMessage(content: Drafty(content: sendText))
     }
-
+    
+    //MARK - PT APP
+    func sendMessageWithContext(sendText: String) {
+        interactor?.sendMessageWithContext(text: sendText)
+    }
+    
     func sendMessageBar(attachment: Bool) {
         if attachment {
             attachFile()

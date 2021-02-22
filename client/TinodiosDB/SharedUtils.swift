@@ -36,9 +36,14 @@ public class SharedUtils {
     // Default connection params.
     #if DEBUG
         public static let kHostName = "127.0.0.1:6060" // localhost
+        // MARK - PT APP
+        public static let kCorefHostName = "127.0.0.1:5050"
         public static let kUseTLS = false
     #else
-        public static let kHostName = "api.tinode.co" // production cluster
+    // MARK - PT APP
+    // Need to change kHostName to UCSC machine
+        public static let kHostName = "?:6060" // production cluster
+        public static let kCorefHostName = "?:5050"
         public static let kUseTLS = true
     #endif
 
@@ -239,13 +244,22 @@ public class SharedUtils {
 extension Tinode {
     public static func getConnectionParams() -> (String, Bool) {
         let (hostName, useTLS, _) = ConnectionSettingsHelper.getConnectionSettings()
-        return (hostName ?? SharedUtils.kHostName, useTLS ?? SharedUtils.kUseTLS)
+        return (hostName ?? SharedUtils.kHostName, useTLS ?? SharedUtils.kUseTLS )
     }
     public func connectDefault(inBackground bkg: Bool) throws -> PromisedReply<ServerMessage>? {
         let (hostName, useTLS) = Tinode.getConnectionParams()
         BaseDb.log.debug("Connecting to %@, secure %@", hostName, useTLS ? "YES" : "NO")
-        //MARK - PT APP - DEBUG
-//        BaseDb.log.info("Connecting to %@, secure %@", hostName, useTLS ? "YES" : "NO")
+        return try connect(to: hostName, useTLS: useTLS, inBackground: bkg)
+    }
+}
+
+// MARK - APP PT
+// Connect to coref server
+extension Tinode {
+    public func connectCoref(inBackground bkg: Bool) throws -> PromisedReply<ServerMessage>? {
+        let (_, useTLS) = Tinode.getConnectionParams()
+        let hostName = SharedUtils.kCorefHostName
+        BaseDb.log.debug("Connecting to %@, secure %@", hostName, useTLS ? "YES" : "NO")
         return try connect(to: hostName, useTLS: useTLS, inBackground: bkg)
     }
 }

@@ -32,6 +32,7 @@ if [ "$hn_index" -eq -1 ]; then
   echo "Entry host_name_preference not found"
   exit 1
 fi
+
 # Find key for TLS use
 find_array_entry "use_tls_preference"
 tls_index=$?
