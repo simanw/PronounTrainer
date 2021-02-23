@@ -14,6 +14,7 @@ class Cache {
     private static let `default` = Cache()
 
     private var tinodeInstance: Tinode? = nil
+    private var corefInstance: Coref? = nil
     private var timer = RepeatingTimer(timeInterval: 60 * 60 * 4) // Once every 4 hours.
     private var largeFileHelper: LargeFileHelper? = nil
     private var queue = DispatchQueue(label: "co.tinode.cache")
@@ -22,6 +23,12 @@ class Cache {
     public static var tinode: Tinode {
         return Cache.default.getTinode()
     }
+    
+    // MARK - PT APP
+    public static var coref: Coref {
+        return Cache.default.getCoref()
+    }
+    
     public static func getLargeFileHelper(withIdentifier identifier: String? = nil) -> LargeFileHelper {
         return Cache.default.getLargeFileHelper(withIdentifier: identifier)
     }
@@ -61,7 +68,14 @@ class Cache {
         }
         return tinodeInstance!
     }
-
+    
+    private func getCoref() -> Coref {
+        if corefInstance == nil {
+            corefInstance = SharedUtils.createCoref()
+        }
+        return corefInstance!
+    }
+    
     private func getLargeFileHelper(withIdentifier identifier: String?) -> LargeFileHelper {
         if largeFileHelper == nil {
             let id = identifier ?? "tinode-\(Date().millisecondsSince1970)"

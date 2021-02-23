@@ -42,4 +42,4 @@ class Filter:
         return body.encode('utf-8')
 
     def msg_to_text(self, input):
-        return input
+        return json.loads(input)

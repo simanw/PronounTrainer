@@ -108,7 +108,12 @@ public class SharedUtils {
         tinode.OsVersion = UIDevice.current.systemVersion
         return tinode
     }
-
+    
+    public static func createCoref() -> Coref {
+        let coref = Coref()
+        return coref
+    }
+    
     public static func registerUserDefaults() {
         /// Here you can give default values to your UserDefault keys
         SharedUtils.kAppDefaults.register(defaults: [
@@ -126,7 +131,34 @@ public class SharedUtils {
             BaseDb.log.info("App started for the first time.")
         }
     }
-
+    public static func connectCoref(using coref: Coref, inBackground bkg: Bool) -> Bool {
+        var success = false
+        do {
+            let msg = try coref.connectDefault(inBackground: bkg)?.getResult()
+            if let code = msg?.ctrl?.code {
+                // Assuming success by default.
+                success = true
+                switch code {
+                case 0..<300:
+                    BaseDb.log.info("Connect Coref - Success")
+                case 409:
+                    BaseDb.log.info("Connect Coref - already authenticated.")
+                case 500..<600:
+                    BaseDb.log.error("Connect Coref - server error on login: %d", code)
+                default:
+                    success = false
+                }
+            }
+        } catch SwiftWebSocket.WebSocketError.network(let e)  {
+            // No network connection.
+            BaseDb.log.debug("Connect&Login Sync [network] - could not connect to Tinode: %@", e)
+            success = true
+        } catch {
+            BaseDb.log.error("Connect&Login Sync - failed to automatically login to Tinode: %@", error.localizedDescription)
+        }
+        return success
+    }
+    
     public static func connectAndLoginSync(using tinode: Tinode, inBackground bkg: Bool) -> Bool {
         guard let userName = SharedUtils.getSavedLoginUserName(), !userName.isEmpty else {
             BaseDb.log.error("Connect&Login Sync - missing user name")
@@ -255,9 +287,14 @@ extension Tinode {
 
 // MARK - APP PT
 // Connect to coref server
-extension Tinode {
-    public func connectCoref(inBackground bkg: Bool) throws -> PromisedReply<ServerMessage>? {
-        let (_, useTLS) = Tinode.getConnectionParams()
+extension Coref {
+    public static func getConnectionParams() -> (String, Bool) {
+        let (hostName, useTLS, _) = ConnectionSettingsHelper.getConnectionSettings()
+        return (hostName ?? SharedUtils.kHostName, useTLS ?? SharedUtils.kUseTLS )
+    }
+    
+    public func connectDefault(inBackground bkg: Bool) throws -> PromisedReply<ServerMessage>? {
+        let (_, useTLS) = Coref.getConnectionParams()
         let hostName = SharedUtils.kCorefHostName
         BaseDb.log.debug("Connecting to %@, secure %@", hostName, useTLS ? "YES" : "NO")
         return try connect(to: hostName, useTLS: useTLS, inBackground: bkg)

@@ -68,11 +68,29 @@ class MessageInteractor: DefaultComTopic.Listener, MessageBusinessLogic, Message
             _ = interactor?.attachToTopic(interactively: false)
         }
     }
+    private class MessageCorefEventListener: CorefEventListener {
+        func onConnect(code: Int, reason: String) {
+            print("Coref connected")
+        }
+        
+        func onDisconnect(byServer: Bool, code: Int, reason: String) {
+            print("Coref disconnected, reason \(reason)")
+        }
+        
+        func onResolution(info: CorefResolution) {
+            print("recieved resolutiom")
+        }
+        
+        
+    }
     static let kMessagesPerPage = 24
     var pagesToLoad: Int = 0
     var topicId: Int64?
     var topicName: String?
     var topic: DefaultComTopic?
+    // MARK - PT APP
+    var coref: Coref?
+    private var corefEventListener: MessageCorefEventListener? = nil
     var presenter: MessagePresentationLogic?
     var messages: [StoredMessage] = []
     private var messageInteractorQueue = DispatchQueue(label: "co.tinode.messageinteractor")
@@ -96,6 +114,13 @@ class MessageInteractor: DefaultComTopic.Listener, MessageBusinessLogic, Message
     @discardableResult
     func setup(topicName: String?, sendReadReceipts: Bool) -> Bool {
         guard let topicName = topicName else { return false }
+        
+        // MARK - PT APP
+        let coref = Cache.coref
+        self.coref = coref
+        self.corefEventListener = MessageCorefEventListener()
+        coref.addListener(self.corefEventListener!)
+        
         self.topicName = topicName
         self.topicId = BaseDb.sharedInstance.topicDb?.getId(topic: topicName)
         let tinode = Cache.tinode
@@ -235,9 +260,30 @@ class MessageInteractor: DefaultComTopic.Listener, MessageBusinessLogic, Message
     }
     // MARK - PT APP
     func sendMessageWithContext(text: String) {
-        var context: [StoredMessage]
-        context = self.messages
-        
+        guard let coref = self.coref else { return }
+        var context: String?
+        if !self.messages.isEmpty {
+            let contents = self.messages.map { msg in
+                return msg.content!.txt
+            }
+            context = contents.joined(separator: " ")
+        }
+        coref.request(text: text, context: context).then(onSuccess:
+                                                            { _ in
+                                                            print("SendMessageWithContext succeeded")
+                                                            return nil}, onFailure: { err in
+            Cache.log.error("sendMessageWithContext error: %@", err.localizedDescription)
+            if let e = err as? CorefError {
+                switch e {
+                case .notConnected(_):
+                    DispatchQueue.main.async { UiUtils.showToast(message: NSLocalizedString("You are offline.", comment: "Toast notification")) }
+                    Cache.coref.reconnectNow(interactively: false, reset: false)
+                default:
+                    DispatchQueue.main.async { UiUtils.showToast(message: NSLocalizedString("Message not sent.", comment: "Toast notification")) }
+                }
+            }
+                                                                return nil
+        })
     }
     
     func sendReadNotification(explicitSeq: Int? = nil, when deadline: DispatchTime) {
@@ -561,3 +607,22 @@ class MessageInteractor: DefaultComTopic.Listener, MessageBusinessLogic, Message
         }
     }
 }
+
+//extension MessageInteractor {
+//
+//    private class MessageCorefEventListener: CorefEventListener {
+//        func onConnect(code: Int, reason: String) {
+//            print("Coref connected")
+//        }
+//
+//        func onDisconnect(byServer: Bool, code: Int, reason: String) {
+//            print("Coref disconnected, reason \(reason)")
+//        }
+//
+//        func onResolution(info: CorefResolution) {
+//            print("recieved resolutiom")
+//        }
+//
+//
+//    }
+//}
