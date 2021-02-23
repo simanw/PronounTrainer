@@ -78,7 +78,7 @@ class MessageInteractor: DefaultComTopic.Listener, MessageBusinessLogic, Message
         }
         
         func onResolution(info: CorefResolution) {
-            print("recieved resolutiom")
+            print("recieved resolution")
         }
         
         

@@ -20,5 +20,5 @@ typealias Cluster = [String]
 public class CorefResolution: Codable {
     var mentions: [Mention]
     var clusters: [Cluster]
-    var resolvedString: String
+    var resolved: String
 }

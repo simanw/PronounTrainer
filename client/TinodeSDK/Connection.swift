@@ -129,7 +129,8 @@ public class Connection {
             self.connectionListener?.onError(error: error)
         }
         webSocketConnection!.event.message = { message in
-            let data = Data(base64Encoded: message)
+            let msg = message as! String
+            let data = msg.data(using: .utf8)!            
             self.connectionListener?.onResolution(with: data)
         }
         webSocketConnection!.event.close = { code, reason, clean in
@@ -213,10 +214,6 @@ protocol ConnectionListener {
     func onMessage(with message: String) -> Void
     func onDisconnect(isServerOriginated: Bool, code: Int, reason: String) -> Void
     func onError(error: Error) -> Void
-    //func onResolution(with resolved: Data) -> Void
+    func onResolution(with resolved: Data) -> Void
 }
 
-// MARK - PT APP
-extension ConnectionListener {
-    func onResolution(with resolved: Data) -> Void {}
-}

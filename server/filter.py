@@ -39,7 +39,8 @@ class Filter:
                 self.response["resolved"] = resolved
         body = json.dumps(self.response, indent=4)
         print(body)
-        return body.encode('utf-8')
+        return body
+        #return body.encode('utf-8')
 
     def msg_to_text(self, input):
         return json.loads(input)
