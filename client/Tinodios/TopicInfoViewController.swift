@@ -189,7 +189,13 @@ class TopicInfoViewController: UITableViewController {
         topicSubtitleTextView.sizeToFit()
         
         // MARK - PT APP
-        pronounsLable.text = "Pronouns: " + (topic.pub?.pronouns?.joined(separator: " "))!
+        var pronounsHolder = "Pronouns: "
+        if let pronouns = topic.pub?.pronouns {
+            pronounsHolder =  pronounsHolder + pronouns.joined(separator: " ")
+        } else {
+            pronounsHolder = pronounsHolder + "missing"
+        }
+        pronounsLable.text = pronounsHolder
         
         avatarImage.set(icon: topic.pub?.photo?.image(), title: topic.pub?.fn, id: topic?.name)
         avatarImage.letterTileFont = self.avatarImage.letterTileFont.withSize(CGFloat(50))

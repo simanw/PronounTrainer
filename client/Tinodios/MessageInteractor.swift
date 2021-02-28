@@ -30,6 +30,10 @@ protocol MessageBusinessLogic: class {
     func uploadImage(_ def: UploadDef)
 }
 
+protocol PronounAlertBusinessLogic: class {
+    func presentPronounAlert(pairs: [MisusedPronounPair])
+}
+
 protocol MessageDataStore {
     var topicName: String? { get set }
     var topic: DefaultComTopic? { get set }
@@ -50,7 +54,7 @@ struct UploadDef {
     var height: CGFloat?
 }
 
-class MessageInteractor: DefaultComTopic.Listener, MessageBusinessLogic, MessageDataStore {
+class MessageInteractor: DefaultComTopic.Listener, MessageBusinessLogic, MessageDataStore, PronounAlertBusinessLogic {
     public enum AttachmentType: Int {
         case file // File attachment
         case image // Image attachment
@@ -69,6 +73,22 @@ class MessageInteractor: DefaultComTopic.Listener, MessageBusinessLogic, Message
         }
     }
     private class MessageCorefEventListener: CorefEventListener {
+        // interactor
+        private weak var interactor: PronounAlertBusinessLogic?
+        private var textAtPos = 0
+        var textPos: Int {
+            get {
+                return textAtPos
+            }
+            set(newPos) {
+                textAtPos = newPos
+            }
+        }
+        
+        init(interactor: PronounAlertBusinessLogic) {
+            self.interactor = interactor
+        }
+        
         func onConnect(code: Int, reason: String) {
             print("Coref connected")
         }
@@ -79,6 +99,11 @@ class MessageInteractor: DefaultComTopic.Listener, MessageBusinessLogic, Message
         
         func onResolution(info: CorefResolution) {
             print("recieved resolution")
+            print(info.resolved)
+            let pos = self.textAtPos
+            let pairs = Cache.misusedPronounDetector.detect(info, after: pos)
+            self.interactor?.presentPronounAlert(pairs: pairs)
+            
         }
         
         
@@ -91,7 +116,8 @@ class MessageInteractor: DefaultComTopic.Listener, MessageBusinessLogic, Message
     // MARK - PT APP
     var coref: Coref?
     private var corefEventListener: MessageCorefEventListener? = nil
-    var presenter: MessagePresentationLogic?
+    private var testStartPos = 0
+    var presenter: ( MessagePresentationLogic & PronounAlertPresentationLogic )?
     var messages: [StoredMessage] = []
     private var messageInteractorQueue = DispatchQueue(label: "co.tinode.messageinteractor")
     private var tinodeEventListener: MessageEventListener? = nil
@@ -118,7 +144,7 @@ class MessageInteractor: DefaultComTopic.Listener, MessageBusinessLogic, Message
         // MARK - PT APP
         let coref = Cache.coref
         self.coref = coref
-        self.corefEventListener = MessageCorefEventListener()
+        self.corefEventListener = MessageCorefEventListener(interactor: self)
         coref.addListener(self.corefEventListener!)
         
         self.topicName = topicName
@@ -261,13 +287,14 @@ class MessageInteractor: DefaultComTopic.Listener, MessageBusinessLogic, Message
     // MARK - PT APP
     func sendMessageWithContext(text: String) {
         guard let coref = self.coref else { return }
-        var context: String?
+        var context = ""
         if !self.messages.isEmpty {
             let contents = self.messages.map { msg in
                 return msg.content!.txt
             }
             context = contents.joined(separator: " ")
         }
+        corefEventListener?.textPos = context.count
         coref.request(text: text, context: context).then(onSuccess:
                                                             { _ in
                                                             print("SendMessageWithContext succeeded")
@@ -284,6 +311,10 @@ class MessageInteractor: DefaultComTopic.Listener, MessageBusinessLogic, Message
             }
                                                                 return nil
         })
+    }
+    
+    func presentPronounAlert(pairs: [MisusedPronounPair]) {
+        self.presenter?.presentPronounAlert(pairs: pairs)
     }
     
     func sendReadNotification(explicitSeq: Int? = nil, when deadline: DispatchTime) {
@@ -608,21 +639,3 @@ class MessageInteractor: DefaultComTopic.Listener, MessageBusinessLogic, Message
     }
 }
 
-//extension MessageInteractor {
-//
-//    private class MessageCorefEventListener: CorefEventListener {
-//        func onConnect(code: Int, reason: String) {
-//            print("Coref connected")
-//        }
-//
-//        func onDisconnect(byServer: Bool, code: Int, reason: String) {
-//            print("Coref disconnected, reason \(reason)")
-//        }
-//
-//        func onResolution(info: CorefResolution) {
-//            print("recieved resolutiom")
-//        }
-//
-//
-//    }
-//}

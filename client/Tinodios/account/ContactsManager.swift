@@ -15,12 +15,15 @@ public class ContactHolder {
     var uniqueId: String? = nil
     // This is used when the contact was found in search: what was matched.
     var subtitle: String? = nil
-
-    init(displayName: String?, image: UIImage?, uniqueId: String?, subtitle: String? = nil) {
+    // MARK - PT APP
+    var pronouns: Set<Pronoun>? = nil
+    
+    init(displayName: String?, image: UIImage?, uniqueId: String?, subtitle: String? = nil, pronouns: Set<Pronoun>? = nil) {
         self.displayName = displayName
         self.image = image
         self.uniqueId = uniqueId
         self.subtitle = subtitle
+        self.pronouns = pronouns
     }
 }
 
@@ -92,7 +95,8 @@ class ContactsManager {
             return ContactHolder(
                 displayName: q.pub?.fn,
                 image: q.pub?.photo?.image(),
-                uniqueId: q.uid)
+                uniqueId: q.uid,
+                pronouns: q.pub?.pronouns)
         }
     }
 }

@@ -8,17 +8,17 @@
 
 import Foundation
 
-class Mention: Codable {
-    var start: Int
-    var end: Int
-    var text: String
-    var resolved: String
+public struct Mention: Codable {
+    public var start: Int
+    public var end: Int
+    public var text: String
+    public var resolved: String
 }
 
-typealias Cluster = [String]
+public typealias Cluster = [String]
 
-public class CorefResolution: Codable {
-    var mentions: [Mention]
-    var clusters: [Cluster]
-    var resolved: String
+public struct CorefResolution: Codable {
+    public var mentions: [Mention]
+    public var clusters: [Cluster]
+    public var resolved: String
 }
