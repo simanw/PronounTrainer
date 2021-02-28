@@ -1,7 +1,7 @@
 import neuralcoref
 import json
 from model import Model
-# a list of object -> json clusters2Json
+
 # log()
 
 class Filter:
@@ -38,7 +38,7 @@ class Filter:
                 self.response["clusters"] = clusters
                 self.response["resolved"] = resolved
         body = json.dumps(self.response, indent=4)
-        print(body)
+        print("[Resolved string] ", resolved)
         return body
         #return body.encode('utf-8')
 
