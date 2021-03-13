@@ -1,0 +1,41 @@
+2021-02-28 at 17:50:53 | INFO | Started socket server: <websockets.server.Serve object at 0x7fb0e92d15d0> ...
+2021-02-28 at 17:51:22 | INFO | New connection from: ('127.0.0.1', 55631) (1 total)
+2021-02-28 at 17:51:23 | ERROR | Connection Closed Error
+2021-02-28 at 17:51:23 | INFO | Disconnected from socket [140397803017744]...
+2021-02-28 at 17:51:43 | INFO | New connection from: ('127.0.0.1', 55693) (1 total)
+2021-02-28 at 17:52:12 | INFO | New connection from: ('127.0.0.1', 55713) (2 total)
+2021-02-28 at 17:53:40 | INFO | < from ('127.0.0.1', 55693) Raw text: b'"You know what? Bobby doesn\xe2\x80\x99t like \xe2\x80\x9cshe\xe2\x80\x9d. What does he prefer? Ok He prefers they, them, themselves. Bobby doesn\xe2\x80\x99t use He? He prefers actually \xe2\x80\x9cthey, them\xe2\x80\x9d"'
+2021-02-28 at 17:53:40 | INFO | Model has done resolution in thread: 4490821056
+2021-02-28 at 17:53:40 | INFO | > Sent back resolved result to ('127.0.0.1', 55693)
+2021-02-28 at 19:38:59 | ERROR | Connection Closed Error
+2021-02-28 at 19:38:59 | INFO | Disconnected from socket [140396173784848]...
+2021-02-28 at 19:39:03 | ERROR | Connection Closed Error
+2021-02-28 at 19:39:03 | INFO | Disconnected from socket [140396173787024]...
+2021-02-28 at 19:39:08 | SUCCESS | Succuessfully shut down [<_UnixSelectorEventLoop running=False closed=True debug=False>].
+2021-03-05 at 16:12:15 | INFO | Started socket server: <websockets.server.Serve object at 0x7fb62d718150> ...
+2021-03-05 at 16:12:33 | INFO | New connection from: ('127.0.0.1', 55873) (1 total)
+2021-03-05 at 16:14:15 | INFO | < from ('127.0.0.1', 55873) Raw text: b'"Hi. Do you know Bobby? He is my new roommate. He uses \xe2\x80\x9cshe\xe2\x80\x9d as pronouns So don\xe2\x80\x99t use \xe2\x80\x9che\xe2\x80\x9d to mention Bobby. Try again. Don\xe2\x80\x99t sue \xe2\x80\x9che\xe2\x80\x9d to mention Bobby Bobby dislikes \xe2\x80\x9che\xe2\x80\x9d. I told him not to go hiking yesterday. Ok. Bobby prefers \xe2\x80\x9cshe\xe2\x80\x9d to \xe2\x80\x9che\xe2\x80\x9d. Got it."'
+2021-03-05 at 16:14:15 | INFO | Model has done resolution in thread: 4358159808
+2021-03-05 at 16:14:15 | INFO | > Sent back resolved result to ('127.0.0.1', 55873)
+2021-03-05 at 16:15:03 | ERROR | Connection Closed Error
+2021-03-05 at 16:15:03 | INFO | Disconnected from socket [140419805990544]...
+2021-03-12 at 14:39:10 | INFO | Started socket server: <websockets.server.Serve object at 0x7fa3c9f905d0> ...
+2021-03-12 at 14:39:43 | INFO | New connection from: ('127.0.0.1', 65342) (1 total)
+2021-03-12 at 14:42:53 | INFO | < from ('127.0.0.1', 65342) Raw text: b'" Hello Bobby."'
+2021-03-12 at 14:42:53 | INFO | Model has done resolution in thread: 4456107456
+2021-03-12 at 14:42:53 | INFO | > Sent back resolved result to ('127.0.0.1', 65342)
+2021-03-12 at 14:43:19 | INFO | < from ('127.0.0.1', 65342) Raw text: b'"Hello Bobby. I heard that Mike prefers \xe2\x80\x9cJem\xe2\x80\x9d to \xe2\x80\x9che\xe2\x80\x9d."'
+2021-03-12 at 14:43:19 | INFO | Model has done resolution in thread: 4456107456
+2021-03-12 at 14:43:19 | INFO | > Sent back resolved result to ('127.0.0.1', 65342)
+2021-03-12 at 14:43:27 | ERROR | Connection Closed Error
+2021-03-12 at 14:43:27 | INFO | Disconnected from socket [140341444939408]...
+2021-03-12 at 14:43:40 | INFO | New connection from: ('127.0.0.1', 65529) (1 total)
+2021-03-12 at 14:44:11 | INFO | < from ('127.0.0.1', 65529) Raw text: b'"Hello Bobby. I heard that Mike prefers \xe2\x80\x9cJem\xe2\x80\x9d to \xe2\x80\x9che\xe2\x80\x9d. Try again, I heard that Mike prefers \xe2\x80\x9cJem\xe2\x80\x9d to \xe2\x80\x9che\xe2\x80\x9d."'
+2021-03-12 at 14:44:11 | INFO | Model has done resolution in thread: 4456107456
+2021-03-12 at 14:44:11 | INFO | > Sent back resolved result to ('127.0.0.1', 65529)
+2021-03-12 at 15:29:05 | ERROR | Connection Closed Error
+2021-03-12 at 15:29:05 | INFO | Disconnected from socket [140342238141008]...
+2021-03-12 at 16:18:47 | INFO | New connection from: ('127.0.0.1', 55598) (1 total)
+2021-03-12 at 16:31:01 | ERROR | Connection Closed Error
+2021-03-12 at 16:31:01 | INFO | Disconnected from socket [140342238261776]...
+2021-03-12 at 16:35:55 | SUCCESS | Succuessfully shut down [<_UnixSelectorEventLoop running=False closed=True debug=False>].

@@ -23,6 +23,10 @@ protocol MessageDisplayLogic: class {
     func dismissVC()
 }
 
+protocol PronounAlertDisplayLogic: class {
+    func presentPronounAlert(pairs: [MisusedPronounPair])
+}
+
 class MessageViewController: UIViewController {
     // Other controllers may send these notification to MessageViewController which will execute corresponding send message action.
     public static let kNotificationSendAttachment = "SendAttachment"
@@ -131,7 +135,7 @@ class MessageViewController: UIViewController {
     /// Pointer to the view holding messages.
     weak var collectionView: MessageView!
 
-    var interactor: (MessageBusinessLogic & MessageDataStore)?
+    var interactor: (MessageBusinessLogic & MessageDataStore & PronounAlertBusinessLogic)?
     private let refreshControl = UIRefreshControl()
 
     // MARK: properties
@@ -227,6 +231,8 @@ class MessageViewController: UIViewController {
         let presenter = MessagePresenter()
         interactor.presenter = presenter
         presenter.viewController = self
+        // MARK - PT APP
+        presenter.pViewController = self
 
         // Notifications settings.
         self.sendTypingNotifications = SharedUtils.kAppDefaults.bool(forKey: SharedUtils.kTinodePrefTypingNotifications)
@@ -1240,4 +1246,41 @@ extension MessageViewController : MessageCellDelegate {
             height: entity.data?["height"]?.asInt())
         performSegue(withIdentifier: "ShowImagePreview", sender: content)
     }
+}
+
+extension MessageViewController: PronounAlertDisplayLogic {
+    func presentPronounAlert(pairs: [MisusedPronounPair]) {
+        print("********* IN View Controller *********")
+        guard pairs.count > 0 else {
+            return
+        }
+        let attrsTitle: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 20.0),
+            .foregroundColor: UIColor.red
+        ]
+        let attrsContent: [NSAttributedString.Key: Any] = [ NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12.0), NSAttributedString.Key.foregroundColor: UIColor.gray]
+        let title = NSAttributedString(string: NSLocalizedString("Misused Pronouns", comment: "View title"), attributes: attrsTitle)
+        
+        var plainMsgs: [String]
+        plainMsgs = pairs.map { p in
+            var m = p.name + " prefers "
+            m.append(p.preferredPronouns.joined(separator: "/"))
+            return m
+        }
+        let _message = plainMsgs.joined(separator: "\n")
+        let message = NSAttributedString(string: _message, attributes: attrsContent)
+        
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
+        alert.setValue(title, forKey: "attributedTitle")
+        alert.setValue(message, forKey: "attributedMessage")
+        
+        alert.addAction(UIAlertAction(
+            title: NSLocalizedString("Ok", comment: "Alert reaction button"), style: .default, handler: { _ in
+                Cache.log.info("Alert occured")
+            }
+        ))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    
 }

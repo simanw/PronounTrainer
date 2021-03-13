@@ -40,6 +40,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 UiUtils.logoutAndRouteToLoginVC()
             }
         }
+        
+        // MARK - PT APP
+        // Try to connect coref server in the background
+        DispatchQueue.global(qos: .userInitiated).async {
+            if !SharedUtils.connectCoref(using: Cache.coref, inBackground: false) {
+                UiUtils.logoutAndRouteToLoginVC()
+            }
+        }
+        
         DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + .seconds(10)) {
             let reachability = NWPathMonitor()
             reachability.start(queue: DispatchQueue.global(qos: .background))

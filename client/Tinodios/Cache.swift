@@ -14,6 +14,8 @@ class Cache {
     private static let `default` = Cache()
 
     private var tinodeInstance: Tinode? = nil
+    private var corefInstance: Coref? = nil
+    private var detectorInstance: MisusedPronounDectector? = nil
     private var timer = RepeatingTimer(timeInterval: 60 * 60 * 4) // Once every 4 hours.
     private var largeFileHelper: LargeFileHelper? = nil
     private var queue = DispatchQueue(label: "co.tinode.cache")
@@ -21,6 +23,14 @@ class Cache {
 
     public static var tinode: Tinode {
         return Cache.default.getTinode()
+    }
+    
+    // MARK - PT APP
+    public static var coref: Coref {
+        return Cache.default.getCoref()
+    }
+    public static var misusedPronounDetector: MisusedPronounDectector {
+        return Cache.default.getDetector()
     }
     public static func getLargeFileHelper(withIdentifier identifier: String? = nil) -> LargeFileHelper {
         return Cache.default.getLargeFileHelper(withIdentifier: identifier)
@@ -40,7 +50,7 @@ class Cache {
     }
     public static func synchronizeContactsPeriodically() {
         Cache.default.timer.suspend()
-        // Try to synchronize contacts immediately
+        // Try to syncmehronize contacts immediately
         ContactsSynchronizer.default.run()
         // And repeat once every 4 hours.
         Cache.default.timer.eventHandler = { ContactsSynchronizer.default.run() }
@@ -61,7 +71,20 @@ class Cache {
         }
         return tinodeInstance!
     }
-
+    // MARK - PT APP
+    private func getCoref() -> Coref {
+        if corefInstance == nil {
+            corefInstance = Coref()
+        }
+        return corefInstance!
+    }
+    private func getDetector() -> MisusedPronounDectector {
+        if detectorInstance == nil {
+            detectorInstance = MisusedPronounDectector()
+        }
+        return detectorInstance!
+    }
+    
     private func getLargeFileHelper(withIdentifier identifier: String?) -> LargeFileHelper {
         if largeFileHelper == nil {
             let id = identifier ?? "tinode-\(Date().millisecondsSince1970)"

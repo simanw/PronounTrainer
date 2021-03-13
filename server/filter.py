@@ -1,23 +1,21 @@
 import neuralcoref
 import json
+from loguru import logger
 from model import Model
-# a list of object -> json clusters2Json
-# log()
 
 class Filter:
 
     def __init__(self):
-        # initialize log
         self.model = Model()
         self.response = None
 
     def on_get(self, msgs):
         self.response = {}
-        text = self.msg_to_text(msgs)
+        text = self.bytes_to_text(msgs)
         doc = self.model.resolve(text)
-        return self.doc_to_json(doc)
+        return self.doc_to_jsonStr(doc)
 
-    def doc_to_json(self, doc):
+    def doc_to_jsonStr(self, doc):
         if doc._.has_coref:
                 mentions = [
                     {
@@ -38,8 +36,11 @@ class Filter:
                 self.response["clusters"] = clusters
                 self.response["resolved"] = resolved
         body = json.dumps(self.response, indent=4)
-        print(body)
-        return body.encode('utf-8')
+        logger.debug(f'Contain coref? {doc._.has_coref}. Formatted Result: {body}')
+        return body
 
-    def msg_to_text(self, input):
-        return input
+    def bytes_to_text(self, input):
+        string = input.decode('utf-8-sig')
+        string = json.loads(string)
+        logger.debug(f'Decoded string: {string}')
+        return string

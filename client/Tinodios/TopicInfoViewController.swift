@@ -38,6 +38,7 @@ class TopicInfoViewController: UITableViewController {
 
     @IBOutlet weak var topicTitleTextView: UITextView!
     @IBOutlet weak var topicSubtitleTextView: UITextView!
+    @IBOutlet weak var pronounsLable: UILabel!
     @IBOutlet weak var avatarImage: RoundImageView!
     @IBOutlet weak var loadAvatarButton: UIButton!
     @IBOutlet weak var mutedSwitch: UISwitch!
@@ -186,6 +187,16 @@ class TopicInfoViewController: UITableViewController {
         let subtitle = topic.comment ?? ""
         topicSubtitleTextView.text = !subtitle.isEmpty ? subtitle : NSLocalizedString("Private info: not set", comment: "Placeholder text in editor")
         topicSubtitleTextView.sizeToFit()
+        
+        // MARK - PT APP
+        var pronounsHolder = "Pronouns: "
+        if let pronouns = topic.pub?.pronouns {
+            pronounsHolder =  pronounsHolder + pronouns.joined(separator: " ")
+        } else {
+            pronounsHolder = pronounsHolder + "missing"
+        }
+        pronounsLable.text = pronounsHolder
+        
         avatarImage.set(icon: topic.pub?.photo?.image(), title: topic.pub?.fn, id: topic?.name)
         avatarImage.letterTileFont = self.avatarImage.letterTileFont.withSize(CGFloat(50))
         mutedSwitch.isOn = topic.isMuted

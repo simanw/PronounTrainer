@@ -91,6 +91,7 @@
 		B0DF032F2282FF46000F9492 /* SendMessageBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0DF032E2282FF46000F9492 /* SendMessageBar.swift */; };
 		B0DF03312283FFD8000F9492 /* PlaceholderTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0DF03302283FFD8000F9492 /* PlaceholderTextView.swift */; };
 		B0F98C8322E381C300444121 /* MessageMenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0F98C8222E381C300444121 /* MessageMenuItem.swift */; };
+		F31EE27725E4CA6000CA147D /* MisusedPronounDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = F31EE27625E4CA6000CA147D /* MisusedPronounDetector.swift */; };
 		F3D6764425D3172B001C506A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F3D6764325D3172B001C506A /* GoogleService-Info.plist */; };
 		F3D6764525D3172B001C506A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F3D6764325D3172B001C506A /* GoogleService-Info.plist */; };
 		FA37AD24238B0D6F00301261 /* KeyboardInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA37AD23238B0D6F00301261 /* KeyboardInfo.swift */; };
@@ -231,6 +232,7 @@
 		B0DF03302283FFD8000F9492 /* PlaceholderTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderTextView.swift; sourceTree = "<group>"; };
 		B0F98C8222E381C300444121 /* MessageMenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageMenuItem.swift; sourceTree = "<group>"; };
 		B36DC000235D850000724348 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		F31EE27625E4CA6000CA147D /* MisusedPronounDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MisusedPronounDetector.swift; sourceTree = "<group>"; };
 		F3D6764325D3172B001C506A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FA37AD23238B0D6F00301261 /* KeyboardInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardInfo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -286,6 +288,7 @@
 			isa = PBXGroup;
 			children = (
 				0A4E1D3122829C52006C0912 /* account */,
+				F31EE27525E4CA2D00CA147D /* coref */,
 				B0C496B022787C020084FA0D /* widgets */,
 				0A95F4D3229BD95900AEF7D3 /* AccountSettingsViewController.swift */,
 				0A2F81C5229677DD007E562C /* AddByIDViewController.swift */,
@@ -417,6 +420,14 @@
 				0A4B11FD2373DC1400199310 /* TagsEditDialogView.swift */,
 			);
 			path = widgets;
+			sourceTree = "<group>";
+		};
+		F31EE27525E4CA2D00CA147D /* coref */ = {
+			isa = PBXGroup;
+			children = (
+				F31EE27625E4CA6000CA147D /* MisusedPronounDetector.swift */,
+			);
+			path = coref;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -694,6 +705,7 @@
 				B0133AE523D1ACBD00C813CA /* SendImageBar.swift in Sources */,
 				B012599C229CEBE600688FCE /* SelectedMemberViewCell.swift in Sources */,
 				0AEE8BEE226456080022EC3F /* UiUtils.swift in Sources */,
+				F31EE27725E4CA6000CA147D /* MisusedPronounDetector.swift in Sources */,
 				0AC33D032293C7A00060D263 /* NewGroupViewController.swift in Sources */,
 				0AE50D4622156A4B0021F7B7 /* FindInteractor.swift in Sources */,
 				0A8C8A4621E5E72D00D8751E /* MessageViewController.swift in Sources */,

@@ -15,10 +15,15 @@ class SignupViewController: UITableViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var emailPhoneTextField: UITextField!
+    // MARK - PT APP
+    @IBOutlet weak var pronounTextField: UITextField!
+    @IBOutlet weak var pronounPicker: UIPickerView!
     @IBOutlet weak var signUpButton: UIButton!
     @IBOutlet var passwordVisibility: [UIButton]!
 
     private var passwordVisible: Bool = false
+    //MARK: PT APP
+    private var pronouns = Set<Pronoun>()
     var imagePicker: ImagePicker!
     var uploadedAvatar: Bool = false
 
@@ -28,7 +33,14 @@ class SignupViewController: UITableViewController {
         UiUtils.adjustPasswordVisibilitySwitchColor(for: passwordVisibility, setColor: .darkGray)
 
         self.imagePicker = ImagePicker(presentationController: self, delegate: self, editable: true)
-
+        
+        // MARK - PT APP
+        pronounPicker.isHidden = true
+        pronounPicker.dataSource = self
+        pronounPicker.delegate = self
+        pronounTextField.delegate = self
+        pronounTextField.inputView = pronounPicker
+        
         // Listen to text change events to clear the possible error from earlier attempt.
         loginTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: UIControl.Event.editingChanged)
         passwordTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: UIControl.Event.editingChanged)
@@ -59,7 +71,10 @@ class SignupViewController: UITableViewController {
         let pwd = UiUtils.ensureDataInTextField(passwordTextField)
         let name = UiUtils.ensureDataInTextField(nameTextField, maxLength: UiUtils.kMaxTitleLength)
         let credential = UiUtils.ensureDataInTextField(emailPhoneTextField)
-
+        
+        //MARK: PT APP
+        UiUtils.ensureDataInTextField(pronounTextField)
+        
         guard !login.isEmpty && !pwd.isEmpty && !name.isEmpty && !credential.isEmpty else { return }
 
         var method: String? = nil
@@ -83,7 +98,9 @@ class SignupViewController: UITableViewController {
         let tinode = Cache.tinode
 
         let avatar = uploadedAvatar ? avatarImageView?.image?.resize(width: UiUtils.kAvatarSize, height: UiUtils.kAvatarSize, clip: true) : nil
-        let vcard = VCard(fn: name, avatar: avatar)
+        // MARK: PT APP
+        let _pronouns = pronouns
+        let vcard = VCard(fn: name, avatar: avatar, pronouns: _pronouns)
 
         let desc = MetaSetDesc<VCard, String>(pub: vcard, priv: nil)
         let cred = Credential(meth: method!, val: credential)
@@ -145,3 +162,35 @@ extension SignupViewController: ImagePickerDelegate {
     }
 }
 
+// MARK: PT APP - UIPickerViewDelegate
+
+extension SignupViewController: UITextFieldDelegate {
+
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        pronounPicker.isHidden = false
+        return false
+    }
+}
+
+// MARK: PT APP - UIPickerViewDelegate
+
+extension SignupViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return Pronouns.count
+    }
+
+    func pickerView( _ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return Pronouns[row].joined(separator: "/")
+    }
+
+    func pickerView( _ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        pronounTextField.text = Pronouns[row].joined(separator: "/")
+        pronouns = Pronouns[row]
+        pronounPicker.isHidden = true
+    }
+}

@@ -100,7 +100,52 @@ public class Connection {
         }
         maybeInitReconnectClosure()
     }
-
+    // MARK - PT APP
+    init(open url: URL, notify listener: ConnectionListener?) {
+        self.apiKey = ""
+        self.endpointComponenets = URLComponents(url: url, resolvingAgainstBaseURL: false)!
+        self.connectionListener = listener
+        if let scheme = endpointComponenets.scheme, scheme == "wss" || scheme == "https" {
+            endpointComponenets.scheme = "wss"
+            useTLS = true
+        } else {
+            endpointComponenets.scheme = "ws"
+        }
+        if endpointComponenets.port == nil {
+            endpointComponenets.port = useTLS ? 443 : 80
+        }
+        self.webSocketConnection = WebSocket()
+        // Use a separate thread to run network event handlers.
+        self.webSocketConnection!.eventQueue = netEventQueue
+        webSocketConnection!.event.open = {
+            self.backoffSteps.reset()
+            let r = self.reconnecting
+            self.reconnecting = false
+            let p = self.param
+            self.param = nil
+            self.connectionListener?.onConnect(reconnecting: r, param: p)
+        }
+        webSocketConnection!.event.error = { error in
+            self.connectionListener?.onError(error: error)
+        }
+        webSocketConnection!.event.message = { message in
+            let msg = message as! String
+            let data = msg.data(using: .utf8)!            
+            self.connectionListener?.onResolution(with: data)
+        }
+        webSocketConnection!.event.close = { code, reason, clean in
+            self.connectionListener?.onDisconnect(isServerOriginated: clean, code: code, reason: reason)
+            guard !self.reconnecting else {
+                return
+            }
+            self.reconnecting = self.autoreconnect
+            if self.autoreconnect {
+                self.connectWithBackoffAsync()
+            }
+        }
+        maybeInitReconnectClosure()
+    }
+    
     private func maybeInitReconnectClosure() {
         if reconnectClosure?.isCancelled ?? true {
             reconnectClosure = DispatchWorkItem() {
@@ -169,4 +214,6 @@ protocol ConnectionListener {
     func onMessage(with message: String) -> Void
     func onDisconnect(isServerOriginated: Bool, code: Int, reason: String) -> Void
     func onError(error: Error) -> Void
+    func onResolution(with resolved: Data) -> Void
 }
+

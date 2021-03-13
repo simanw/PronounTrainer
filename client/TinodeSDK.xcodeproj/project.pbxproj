@@ -37,6 +37,8 @@
 		B0876010243F1C3E00B464D1 /* MeTopic.swift in Sources */ = {isa = PBXBuildFile; fileRef = B087600F243F1C3E00B464D1 /* MeTopic.swift */; };
 		B0876012243F1DD900B464D1 /* FndTopic.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0876011243F1DD900B464D1 /* FndTopic.swift */; };
 		B0876014243F1E4000B464D1 /* ComTopic.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0876013243F1E4000B464D1 /* ComTopic.swift */; };
+		F31EE22E25E36E8B00CA147D /* Coref.swift in Sources */ = {isa = PBXBuildFile; fileRef = F31EE22D25E36E8B00CA147D /* Coref.swift */; };
+		F31EE23225E45AF200CA147D /* CorefResolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = F31EE23125E45AF200CA147D /* CorefResolution.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +91,8 @@
 		B4211CF84B51039364CC4DD3 /* Pods-TinodeSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TinodeSDK.debug.xcconfig"; path = "./Pods/Target Support Files/Pods-TinodeSDK/Pods-TinodeSDK.debug.xcconfig"; sourceTree = "<group>"; };
 		BF75C7301A406947462E1C7D /* Pods_TinodeSDKTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TinodeSDKTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D80621A4BCCAF3C0B58C06E5 /* Pods-TinodeSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TinodeSDK.release.xcconfig"; path = "Pods/Target Support Files/Pods-TinodeSDK/Pods-TinodeSDK.release.xcconfig"; sourceTree = "<group>"; };
+		F31EE22D25E36E8B00CA147D /* Coref.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coref.swift; sourceTree = "<group>"; };
+		F31EE23125E45AF200CA147D /* CorefResolution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorefResolution.swift; sourceTree = "<group>"; };
 		FD6888AEFAE0E94A350A75E8 /* Pods-TinodeSDKTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TinodeSDKTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-TinodeSDKTests/Pods-TinodeSDKTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -143,6 +147,7 @@
 				B0876011243F1DD900B464D1 /* FndTopic.swift */,
 				0A610452227563E200C6A9D2 /* Log.swift */,
 				B087600F243F1C3E00B464D1 /* MeTopic.swift */,
+				F31EE22D25E36E8B00CA147D /* Coref.swift */,
 				0A431BF22244A14C00A837F7 /* PromisedReply.swift */,
 				0A431BF32244A14C00A837F7 /* RFC3339Format.swift */,
 				0A431BF72244A14D00A837F7 /* Storage.swift */,
@@ -167,6 +172,7 @@
 				0A431BED2244A14B00A837F7 /* Drafty.swift */,
 				0AAF8BEB23B70E2A00C9CFBB /* MsgRange.swift */,
 				0A431BEE2244A14B00A837F7 /* ServerMessages.swift */,
+				F31EE23125E45AF200CA147D /* CorefResolution.swift */,
 				0A431BEF2244A14B00A837F7 /* Subscription.swift */,
 				0A81B316236FA896009AF14B /* Types.swift */,
 				0A431BF02244A14B00A837F7 /* VCard.swift */,
@@ -405,6 +411,8 @@
 				0A44B0082244AAC500A98866 /* Defacs.swift in Sources */,
 				0A431C002244A14D00A837F7 /* RFC3339Format.swift in Sources */,
 				0A44B00D2244AAC500A98866 /* AcsHelper.swift in Sources */,
+				F31EE22E25E36E8B00CA147D /* Coref.swift in Sources */,
+				F31EE23225E45AF200CA147D /* CorefResolution.swift in Sources */,
 				0A431BFE2244A14D00A837F7 /* Storage.swift in Sources */,
 				B0876010243F1C3E00B464D1 /* MeTopic.swift in Sources */,
 			);

@@ -87,7 +87,10 @@ public class VCard: Codable, Mergeable {
     public var impp: [Contact]?
     // Avatar photo.
     public var photo: Photo?
-
+    
+    // List of pronouns
+    public var pronouns: Set<Pronoun>?
+    
     public init(fn: String?, avatar: Photo?) {
         self.fn = fn
         self.photo = avatar
@@ -105,6 +108,22 @@ public class VCard: Codable, Mergeable {
         guard let avatar = avatar else { return }
         self.photo = Photo(image: avatar)
     }
+    // MARK: PT APP
+    public init(fn: String?, avatar: Data?, pronouns: Set<Pronoun>?) {
+        self.fn = fn
+        self.pronouns = pronouns
+        guard let avatar = avatar else { return }
+        self.photo = Photo(type: nil, data: avatar)
+        
+    }
+    public init(fn: String?, avatar: UIImage?, pronouns: Set<Pronoun>?) {
+        self.fn = fn
+        self.pronouns = pronouns
+        guard let avatar = avatar else { return }
+        self.photo = Photo(image: avatar)
+        
+    }
+    
     public func copy() -> VCard {
         let vcardCopy = VCard(
             fn: fn,
@@ -115,6 +134,8 @@ public class VCard: Codable, Mergeable {
         vcardCopy.tel = self.tel?.map { $0 }
         vcardCopy.email = self.email?.map { $0 }
         vcardCopy.impp = self.impp?.map { $0 }
+        // MARK: PT APP
+        vcardCopy.pronouns = self.pronouns
         return vcardCopy
     }
 
@@ -148,6 +169,13 @@ public class VCard: Codable, Mergeable {
         }
         if anotherVCard.photo != nil {
             self.photo = !Tinode.isNull(obj: anotherVCard.photo) ? anotherVCard.photo : nil
+            changed += 1
+        }
+        
+        // MARK: PT APP
+        if anotherVCard.pronouns != nil {
+            self.pronouns = !Tinode.isNull(obj: anotherVCard.pronouns) ?
+                anotherVCard.pronouns : nil
             changed += 1
         }
         return changed

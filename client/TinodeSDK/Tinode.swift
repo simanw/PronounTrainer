@@ -1019,6 +1019,10 @@ public class Tinode {
             Log.default.error("Tinode network error: %@", error.localizedDescription)
             try? rejectAllPromises(err: error)
         }
+        func onResolution(with resolved: Data) -> Void {
+            return
+        }
+        
         public func addPromise(promise: PromisedReply<ServerMessage>) {
             promiseQueue.sync {
                 completionPromises.append(promise)

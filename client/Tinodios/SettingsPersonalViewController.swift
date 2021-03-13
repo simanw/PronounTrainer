@@ -17,7 +17,8 @@ class SettingsPersonalViewController: UITableViewController {
     @IBOutlet weak var userNameLabel: UILabel!
     @IBOutlet weak var avatarImage: RoundImageView!
     @IBOutlet weak var loadAvatarButton: UIButton!
-
+    //MARK: PT APP
+    @IBOutlet weak var pronounsLabel: UILabel!
     @IBOutlet weak var myUIDLabel: UILabel!
 
     @IBOutlet weak var manageContacts: UITableViewCell!
@@ -61,7 +62,14 @@ class SettingsPersonalViewController: UITableViewController {
     private func reloadData() {
         // Title.
         self.userNameLabel.text = me.pub?.fn ?? NSLocalizedString("Unknown", comment: "Placeholder for missing user name")
-
+        
+        //MARK: PT APP
+        // Pronouns label
+        let pronouns = me.pub?.pronouns ?? Set<Pronoun>()
+        self.pronounsLabel.text = pronouns.count > 0 ? pronouns.joined(separator: "/") :
+            "Missing pronouns"
+            
+        
         // My UID/Address label.
         self.myUIDLabel.text = self.tinode.myUid
         self.myUIDLabel.sizeToFit()

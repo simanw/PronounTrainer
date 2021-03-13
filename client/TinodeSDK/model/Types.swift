@@ -60,3 +60,18 @@ public typealias DefaultTopic = Topic<VCard, PrivateType, VCard, PrivateType>
 public typealias DefaultComTopic = ComTopic<VCard>
 public typealias DefaultMeTopic = MeTopic<VCard>
 public typealias DefaultFndTopic = FndTopic<VCard>
+
+// MARK: PT APP
+public typealias Pronoun = String
+public let Pronouns: [Set<Pronoun>] = [
+    ["she", "her", "hers", "herself"],
+    ["he", "him", "his", "hiself"],
+    ["they", "them", "their", "theirs", "themselves"],
+    ["fey", "fem", "feir", "feirs", "feirself"],
+    ["jee", "jem", "jeir", "jemself"],
+    ["per", "pers", "perself"],
+    ["vi", "vim", "vir", "virs", "vimself"],
+    ["xey", "xem", "xyr", "xemself"],
+    ["ze", "zir", "zirs", "zirself"],
+    ["zie", "zem", "zes", "zirself"],
+]

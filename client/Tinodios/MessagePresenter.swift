@@ -24,9 +24,19 @@ protocol MessagePresentationLogic {
     func dismiss()
 }
 
-class MessagePresenter: MessagePresentationLogic {
-    weak var viewController: MessageDisplayLogic?
+protocol PronounAlertPresentationLogic {
+    func presentPronounAlert(pairs: [MisusedPronounPair])
+}
 
+class MessagePresenter: MessagePresentationLogic, PronounAlertPresentationLogic {
+    weak var viewController: MessageDisplayLogic?
+    weak var pViewController: PronounAlertDisplayLogic?
+    
+    func presentPronounAlert(pairs: [MisusedPronounPair]) {
+        DispatchQueue.main.async {
+            self.pViewController?.presentPronounAlert(pairs: pairs)
+        }
+    }
     func switchTopic(topic: String?) {
         DispatchQueue.main.async {
             self.viewController?.switchTopic(topic: topic)
@@ -84,3 +94,4 @@ class MessagePresenter: MessagePresentationLogic {
         }
     }
 }
+

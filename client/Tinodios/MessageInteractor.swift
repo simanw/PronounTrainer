@@ -18,6 +18,8 @@ protocol MessageBusinessLogic: class {
     func leaveTopic()
 
     func sendMessage(content: Drafty)
+    //MARK - PT APP
+    func sendMessageWithContext(text: String)
     func sendReadNotification(explicitSeq: Int?, when deadline: DispatchTime)
     func sendTypingNotification()
     func enablePeersMessaging()
@@ -26,6 +28,10 @@ protocol MessageBusinessLogic: class {
     func blockTopic()
     func uploadFile(_ def: UploadDef)
     func uploadImage(_ def: UploadDef)
+}
+
+protocol PronounAlertBusinessLogic: class {
+    func presentPronounAlert(pairs: [MisusedPronounPair])
 }
 
 protocol MessageDataStore {
@@ -48,7 +54,7 @@ struct UploadDef {
     var height: CGFloat?
 }
 
-class MessageInteractor: DefaultComTopic.Listener, MessageBusinessLogic, MessageDataStore {
+class MessageInteractor: DefaultComTopic.Listener, MessageBusinessLogic, MessageDataStore, PronounAlertBusinessLogic {
     public enum AttachmentType: Int {
         case file // File attachment
         case image // Image attachment
@@ -66,12 +72,53 @@ class MessageInteractor: DefaultComTopic.Listener, MessageBusinessLogic, Message
             _ = interactor?.attachToTopic(interactively: false)
         }
     }
+    private class MessageCorefEventListener: CorefEventListener {
+        // interactor
+        private weak var interactor: PronounAlertBusinessLogic?
+        private var textAtPos = 0
+        var textPos: Int {
+            get {
+                return textAtPos
+            }
+            set(newPos) {
+                textAtPos = newPos
+            }
+        }
+        
+        init(interactor: PronounAlertBusinessLogic) {
+            self.interactor = interactor
+        }
+        
+        func onConnect(code: Int, reason: String) {
+            print("Coref connected")
+        }
+        
+        func onDisconnect(byServer: Bool, code: Int, reason: String) {
+            print("Coref disconnected, reason \(reason)")
+        }
+        
+        func onResolution(info: CorefResolution) {
+            print("recieved resolution")
+            print(info.resolved)
+            let pos = self.textAtPos
+            let detector = Cache.misusedPronounDetector
+            let pairs = detector.detect(info, after: pos)
+            self.interactor?.presentPronounAlert(pairs: pairs)
+            
+        }
+        
+        
+    }
     static let kMessagesPerPage = 24
     var pagesToLoad: Int = 0
     var topicId: Int64?
     var topicName: String?
     var topic: DefaultComTopic?
-    var presenter: MessagePresentationLogic?
+    // MARK - PT APP
+    var coref: Coref?
+    private var corefEventListener: MessageCorefEventListener? = nil
+    private var testStartPos = 0
+    var presenter: ( MessagePresentationLogic & PronounAlertPresentationLogic )?
     var messages: [StoredMessage] = []
     private var messageInteractorQueue = DispatchQueue(label: "co.tinode.messageinteractor")
     private var tinodeEventListener: MessageEventListener? = nil
@@ -94,6 +141,13 @@ class MessageInteractor: DefaultComTopic.Listener, MessageBusinessLogic, Message
     @discardableResult
     func setup(topicName: String?, sendReadReceipts: Bool) -> Bool {
         guard let topicName = topicName else { return false }
+        
+        // MARK - PT APP
+        let coref = Cache.coref
+        self.coref = coref
+        self.corefEventListener = MessageCorefEventListener(interactor: self)
+        coref.addListener(self.corefEventListener!)
+        
         self.topicName = topicName
         self.topicId = BaseDb.sharedInstance.topicDb?.getId(topic: topicName)
         let tinode = Cache.tinode
@@ -231,6 +285,39 @@ class MessageInteractor: DefaultComTopic.Listener, MessageBusinessLogic, Message
             }
         )
     }
+    // MARK - PT APP
+    func sendMessageWithContext(text: String) {
+        guard let coref = self.coref else { return }
+        var context = ""
+        if !self.messages.isEmpty {
+            let contents = self.messages.map { msg in
+                return msg.content!.txt
+            }
+            context = contents.joined(separator: " ")
+        }
+        corefEventListener?.textPos = context.count
+        coref.request(text: text, context: context).then(onSuccess:
+                                                            { _ in
+                                                            print("SendMessageWithContext succeeded")
+                                                            return nil}, onFailure: { err in
+            Cache.log.error("sendMessageWithContext error: %@", err.localizedDescription)
+            if let e = err as? CorefError {
+                switch e {
+                case .notConnected(_):
+                    DispatchQueue.main.async { UiUtils.showToast(message: NSLocalizedString("You are offline.", comment: "Toast notification")) }
+                    Cache.coref.reconnectNow(interactively: false, reset: false)
+                default:
+                    DispatchQueue.main.async { UiUtils.showToast(message: NSLocalizedString("Message not sent.", comment: "Toast notification")) }
+                }
+            }
+                                                                return nil
+        })
+    }
+    
+    func presentPronounAlert(pairs: [MisusedPronounPair]) {
+        self.presenter?.presentPronounAlert(pairs: pairs)
+    }
+    
     func sendReadNotification(explicitSeq: Int? = nil, when deadline: DispatchTime) {
         guard self.sendReadReceipts else { return }
         // We don't send a notification if more notifications are pending.
@@ -552,3 +639,4 @@ class MessageInteractor: DefaultComTopic.Listener, MessageBusinessLogic, Message
         }
     }
 }
+
