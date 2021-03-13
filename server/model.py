@@ -1,3 +1,4 @@
+from loguru import logger
 # Load your usual SpaCy model (one of SpaCy English models)
 import spacy
 nlp = spacy.load('en')
@@ -8,8 +9,7 @@ class Model:
     def __init__(self):
         coref = neuralcoref.NeuralCoref(nlp.vocab)
         nlp.add_pipe(coref, name='neuralcoref')
-        print("Model loaded")
+        logger.info("Model loaded")
 
     def resolve(self, text):
-        doc = nlp(text)
-        return doc
+        return nlp(text)

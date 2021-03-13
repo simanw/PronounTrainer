@@ -101,7 +101,8 @@ class MessageInteractor: DefaultComTopic.Listener, MessageBusinessLogic, Message
             print("recieved resolution")
             print(info.resolved)
             let pos = self.textAtPos
-            let pairs = Cache.misusedPronounDetector.detect(info, after: pos)
+            let detector = Cache.misusedPronounDetector
+            let pairs = detector.detect(info, after: pos)
             self.interactor?.presentPronounAlert(pairs: pairs)
             
         }

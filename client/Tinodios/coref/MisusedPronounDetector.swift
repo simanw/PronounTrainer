@@ -20,6 +20,7 @@ public class MisusedPronounDectector {
     private var contactManager = ContactsManager()
     private var contacts: [ContactHolder]?
     private var contactsPronounsMap: [String:Set<Pronoun>] = [:]
+    private var nameContactsMap: [String: [ContactHolder]] = [:]
     
     init() {
         self.contacts = contactManager.fetchContacts()
@@ -35,17 +36,44 @@ public class MisusedPronounDectector {
 //                self.contactsPronounsMap[uniqueId] = p
 //            }
             if let name = contact.displayName, let p = contact.pronouns {
-                let lastName = name.split(separator: " ")[0]
-                self.contactsPronounsMap[String(lastName)] = p
+                let firstName = name.split(separator: " ")[0]
+                self.contactsPronounsMap[String(firstName)] = p
             }
         }
         
     }
     
+    private func createNameContactsMap() {
+        guard let contacts = self.contacts else {
+            return
+        }
+        for contact in contacts {
+            if let name = contact.displayName {
+                let firstName = name.split(separator: " ")[0]
+                var bucket = self.nameContactsMap[String(firstName), default: []]
+                bucket.append(contact)
+            }
+        }
+    }
+    
+    
     public func updateContactsMap() {
         self.contacts = contactManager.fetchContacts()
         createContactsMap()
     }
+    
+//    public func detect_(_ resolved: CorefResolution, after: Int) -> [MisusedPronounPair] {
+//        var misusedPairs: [MisusedPronounPair] = []
+//        var seenNames: Set<String> = []
+//        for mention in resolved.mentions {
+//            if mention.start >= after {
+//                let name = mention.resolved
+//                let resolvedPronoun = mention.text
+//
+//
+//            }
+//        }
+//    }
     
     public func detect(_ resolved: CorefResolution, after: Int) -> [MisusedPronounPair] {
         var misusedPairs: [MisusedPronounPair] = []

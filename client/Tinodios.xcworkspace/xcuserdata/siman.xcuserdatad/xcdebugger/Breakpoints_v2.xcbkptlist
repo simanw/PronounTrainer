@@ -7,23 +7,23 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "8969924B-8A8F-44D9-ADCB-275484DE1DCB"
+            uuid = "AE1452B3-882E-416E-BDFA-B7D1C5A6BBEB"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Tinodios/MessageInteractor.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "317"
-            endingLineNumber = "317"
-            landmarkName = "presentPronounAlert(pairs:)"
+            startingLineNumber = "106"
+            endingLineNumber = "106"
+            landmarkName = "onResolution(info:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "2861E5A5-C691-4C2C-A4C9-7A232DBE37AA"
+            uuid = "AB356FFF-C9F5-4F4C-B2C5-F0FE5C2AEEFA"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -39,16 +39,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "6E8EEAC8-6D19-448F-B2DE-A68D90C646E1"
+            uuid = "4F2DAB8A-C268-4184-B2F5-908B5323AC0D"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Tinodios/MessagePresenter.swift"
+            filePath = "TinodeSDK/Coref.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "37"
-            endingLineNumber = "37"
-            landmarkName = "presentPronounAlert(pairs:)"
+            startingLineNumber = "143"
+            endingLineNumber = "143"
+            landmarkName = "onResolution(info:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

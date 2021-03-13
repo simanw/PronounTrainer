@@ -1254,21 +1254,25 @@ extension MessageViewController: PronounAlertDisplayLogic {
         guard pairs.count > 0 else {
             return
         }
-        let attrs: [NSAttributedString.Key: Any] = [
+        let attrsTitle: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 20.0),
             .foregroundColor: UIColor.red
         ]
-        let title = NSAttributedString(string: NSLocalizedString("Misused Pronouns", comment: "View title"), attributes: attrs)
+        let attrsContent: [NSAttributedString.Key: Any] = [ NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12.0), NSAttributedString.Key.foregroundColor: UIColor.gray]
+        let title = NSAttributedString(string: NSLocalizedString("Misused Pronouns", comment: "View title"), attributes: attrsTitle)
+        
         var plainMsgs: [String]
         plainMsgs = pairs.map { p in
             var m = p.name + " prefers "
             m.append(p.preferredPronouns.joined(separator: "/"))
             return m
         }
-        let message = plainMsgs.joined(separator: "\n")
-            
-        let alert = UIAlertController(title: nil, message: message, preferredStyle: .actionSheet)
+        let _message = plainMsgs.joined(separator: "\n")
+        let message = NSAttributedString(string: _message, attributes: attrsContent)
+        
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
         alert.setValue(title, forKey: "attributedTitle")
+        alert.setValue(message, forKey: "attributedMessage")
         
         alert.addAction(UIAlertAction(
             title: NSLocalizedString("Ok", comment: "Alert reaction button"), style: .default, handler: { _ in
